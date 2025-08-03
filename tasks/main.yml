@@ -1,0 +1,68 @@
+---
+# Main tasks file for dev_env_setup
+- name: Install packages
+  ansible.builtin.dnf:
+    name:
+      - acl
+      - bash-completion
+      - git
+      - python3-pip
+      - tmux
+      - tree
+    state: present
+
+- name: Install pipx with pip
+  ansible.builtin.pip:
+    name: pipx
+
+# See vars/
+- name: Create dev_user
+  ansible.builtin.user:
+    name: "{{ dev_user }}"
+    groups: "{{ dev_user_groups }}"
+    create_home: true
+
+- name: Install user python packages with pipx
+  vars:
+    pipx_packages:
+      - poetry
+      - tox
+  community.general.pipx:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ pipx_packages }}"
+  become: true
+  become_user: "{{ dev_user }}"
+
+- name: Download bash-git-prompt
+  ansible.builtin.git:
+    repo: "https://github.com/magicmonty/bash-git-prompt.git"
+    dest: "/home/{{ dev_user }}/.bash-git-prompt"
+    depth: 1
+    version: "2.7.1"
+  become: true
+  become_user: "{{ dev_user }}"
+
+- name: Copy .bashrc file to user home
+  ansible.builtin.template:
+    src: templates/.bashrc.j2
+    dest: "/home/{{ dev_user }}/.bashrc"
+    mode: "0700"
+  become: true
+  become_user: "{{ dev_user }}"
+
+- name: Download bash-it
+  ansible.builtin.git:
+    repo: "https://github.com/Bash-it/bash-it.git"
+    dest: "/home/{{ dev_user }}/.bash-it"
+    depth: 1
+    version: v3.0.3
+  become: true
+  become_user: "{{ dev_user }}"
+
+- name: Run bash-it install
+  ansible.builtin.command:
+    cmd: "/home/{{ dev_user }}/.bash-it/install.sh --no-modify-config --silent"
+    creates: "/home/{{ dev_user }}/.bash-it/installed"
+  become: true
+  become_user: "{{ dev_user }}"

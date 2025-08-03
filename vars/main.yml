@@ -1,0 +1,6 @@
+---
+bash_it_theme: pure
+dev_git_email: {GIT_EMAIL}
+dev_git_name: {GIT_NAME}
+dev_user: {DEV_USER}
+dev_user_groups: adm,systemd-journal,wheel

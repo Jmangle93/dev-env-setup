@@ -1,0 +1,27 @@
+[user]
+	email = {{ dev_git_email }}
+	name = {{ dev_git_name }}
+[credential]
+	helper = store
+[core]
+	editor = code --wait
+[diff]
+    tool = vscode-diff
+	submodule = log
+[difftool]
+    prompt = false
+[difftool "vscode-diff"]
+    cmd = code --wait --diff $LOCAL $REMOTE
+[merge]
+    tool = vscode-merge
+[mergetool]
+    keepBackup = false
+[mergetool "vscode-merge"]
+    cmd = code --wait $MERGED
+[alias]
+    egc = config --global --edit
+    elc = config --local --edit
+[status]
+	submoduleSummary = true
+[push]
+	recurseSubmodules = on-demand
