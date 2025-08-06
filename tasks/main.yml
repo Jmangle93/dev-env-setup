@@ -16,11 +16,18 @@
     name: pipx
 
 # See vars/
+- name: Check if dev_user already exists
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ dev_user }}"
+  register: user_check
+
 - name: Create dev_user
   ansible.builtin.user:
     name: "{{ dev_user }}"
     groups: "{{ dev_user_groups }}"
     create_home: true
+  when: user_check is failed or user_check is not defined
 
 - name: Install user python packages with pipx
   vars:

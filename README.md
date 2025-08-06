@@ -35,7 +35,7 @@ Starting with a bash theme and profile, supplying a global git config for a new 
 
 ## Dependencies
 
-community.general.pipx
+community.general.pipx: `ansible-galaxy collection install community.general`, `python3 -m pip install pipx~=1.7.1`
 
 ## Example Playbook
 ```
